@@ -1,0 +1,15 @@
+{
+  "name": "image-processor",
+  "version": "1.0.0",
+  "description": "图片自动调整工具",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron.cmd ."
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "electron": "^37.1.0"
+  }
+}

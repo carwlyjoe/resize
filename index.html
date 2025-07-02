@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>图片自动调整工具</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .file-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    input, button {
+      padding: 8px 12px;
+    }
+    input[type="text"] {
+      flex-grow: 1;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    input[type="number"] {
+      width: 100px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    input[type="range"] {
+      flex-grow: 1;
+      margin: 0 10px;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+    }
+    button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    #processBtn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .rules {
+      background-color: #f9f9f9;
+      border-left: 4px solid #4CAF50;
+      padding: 10px 15px;
+      margin: 20px 0;
+    }
+    .size-settings {
+      background-color: #e8f4f8;
+      border: 1px solid #bee5eb;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .size-settings h4 {
+      margin-top: 0;
+      color: #0c5460;
+    }
+    .advanced-options {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .advanced-options h4 {
+      margin-top: 0;
+      color: #495057;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .range-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .range-value {
+      min-width: 40px;
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+    }
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .size-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .size-input-group label {
+      min-width: 120px;
+      margin-bottom: 0;
+    }
+    .size-input-group input[type="number"] {
+      width: 80px;
+    }
+    .size-input-group select {
+      width: 120px;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .success {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    .error {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>图片自动调整工具</h1>
+    
+
+    
+    <div class="input-group">
+      <label for="inputPath">选择输入图片或文件夹：</label>
+      <div class="file-input">
+        <input type="text" id="inputPath" readonly>
+        <button id="inputBtn">浏览...</button>
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label for="outputPath">选择输出位置：</label>
+      <div class="file-input">
+        <input type="text" id="outputPath" readonly>
+        <button id="outputBtn">浏览...</button>
+      </div>
+    </div>
+    
+    <div class="size-settings">
+      <h4>📐 图片尺寸设置</h4>
+      
+      <div class="two-column">
+        <div>
+          <h5 style="margin-bottom: 10px; color: #0c5460;">🖼️ 横屏图片 (宽≥高)</h5>
+          <div class="size-input-group">
+            <label>最大宽度：</label>
+            <input type="number" id="landscapeWidth" value="500" min="100" max="2000" step="50">
+            <span>像素</span>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="landscapeKeepSmall" checked>
+            <label for="landscapeKeepSmall">保持小图不放大</label>
+          </div>
+        </div>
+        
+        <div>
+          <h5 style="margin-bottom: 10px; color: #0c5460;">📱 竖屏图片 (高>宽)</h5>
+          <div class="size-input-group">
+            <label>统一宽度：</label>
+            <input type="number" id="portraitWidth" value="200" min="100" max="1000" step="50">
+            <span>像素</span>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="portraitKeepSmall" checked>
+            <label for="portraitKeepSmall">保持小图不放大</label>
+          </div>
+        </div>
+      </div>
+      
+      <div style="font-size: 12px; color: #0c5460; margin-top: 10px;">
+        <strong>说明：</strong>所有调整都会保持原始纵横比例。"保持小图不放大"选项可以避免将小图片放大到模糊。
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label for="maxSize">最大文件大小 (KB)：</label>
+      <input type="number" id="maxSize" value="70" min="1">
+    </div>
+    
+    <div class="advanced-options">
+      <h4>⚙️ 高级选项</h4>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="useLossless">
+        <label for="useLossless">使用无损压缩 (PNG格式，文件更大但质量最佳)</label>
+      </div>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="useAdvancedCompression" checked>
+        <label for="useAdvancedCompression">🚀 启用商业级压缩算法 (接近TinyPNG质量，推荐)</label>
+      </div>
+      
+      <div class="checkbox-group">
+        <input type="checkbox" id="skipIfOptimal" checked>
+        <label for="skipIfOptimal">智能跳过 (如果图片已符合要求，跳过处理避免质量损失)</label>
+      </div>
+      
+      <div class="range-group" id="jpegQualityGroup">
+        <label>JPEG质量：</label>
+        <input type="range" id="jpegQuality" min="60" max="100" value="95" step="5">
+        <span class="range-value" id="jpegQualityValue">95</span>
+      </div>
+      
+      <div style="font-size: 12px; color: #666; margin-top: 10px;">
+        <strong>💡 压缩算法说明：</strong><br>
+        • <strong>商业级算法</strong>：使用MozJPEG编码器、渐进式压缩、网格量化等先进技术，压缩率可达80-90%<br>
+        • <strong>标准算法</strong>：使用常规JPEG压缩，压缩率通常60-75%<br>
+        • <strong>无损压缩</strong>：PNG格式，质量完美但文件较大
+      </div>
+    </div>
+    
+    <button id="processBtn" disabled>开始处理</button>
+    
+    <div id="status"></div>
+  </div>
+  
+  <script src="renderer.js"></script>
+</body>
+</html> 
