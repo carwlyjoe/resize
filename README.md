@@ -4,7 +4,7 @@
 ![Node.js](https://img.shields.io/badge/node.js-16+-green.svg)
 ![Electron](https://img.shields.io/badge/electron-latest-blue.svg)
 
-一个基于Electron的现代化图片压缩和尺寸调整工具，支持商业级压缩算法，提供媲美TinyPNG的压缩效果。
+一个基于Electron的现代化图片压缩和尺寸调整工具，支持商业级压缩算法，提供高质量的图片压缩效果。
 
 ## ✨ 特色功能
 
@@ -118,8 +118,8 @@ cscript //nologo start.vbs
 
 | 模式 | 描述 | 适用场景 |
 |------|------|----------|
-| **商业级JPEG** | MozJPEG算法，接近TinyPNG质量 | 网站图片、社交媒体 |
-| **标准JPEG** | 常规压缩算法 | 对比展示 |
+| **商业级JPEG** | MozJPEG算法，高质量压缩 | 网站图片、社交媒体 |
+| **标准JPEG** | 常规压缩算法 | 通用场景 |
 | **PNG无损** | 完美质量保持 | 设计素材、透明图片 |
 
 ## ⚙️ 高级特性
@@ -244,6 +244,25 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - [Sharp](https://sharp.pixelplumbing.com/) - 高性能图像处理
 - [Electron](https://www.electronjs.org/) - 跨平台桌面应用框架
 - [MozJPEG](https://github.com/mozilla/mozjpeg) - Mozilla的JPEG编码器
+
+## 🔐 API Key 安全性说明
+
+### 本地存储，绝对安全
+- ✅ **API Key只保存在您的本地计算机**：使用浏览器的localStorage存储
+- ✅ **不会被推送到Git仓库**：API Key不存在于任何代码文件中
+- ✅ **不会被上传到云端**：所有数据仅存储在本地
+- ✅ **其他人无法访问**：只有您的计算机可以访问这些API Key
+
+### 存储位置
+API Key存储在：
+- **Windows**: `%APPDATA%\Local\Electron\User Data\Default\Local Storage`
+- **macOS**: `~/Library/Application Support/Electron/Local Storage`
+- **Linux**: `~/.config/Electron/Local Storage`
+
+### 安全建议
+1. 🔒 不要在公共计算机上保存API Key
+2. 📱 定期检查TinyPNG使用情况
+3. 🔄 如有疑虑可随时删除并重新添加API Key
 
 ---
 

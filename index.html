@@ -166,12 +166,88 @@
       background-color: #f2dede;
       color: #a94442;
     }
+    .api-key-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      margin-bottom: 5px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background-color: white;
+      font-size: 12px;
+    }
+    .api-key-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .api-key-status {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .status-available {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status-limited {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .status-exhausted {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .api-key-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 11px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .btn-test {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>图片自动调整工具</h1>
     
+    <!-- TinyPNG API Key 管理器 -->
+    <div class="advanced-options">
+      <h4>🔑 TinyPNG API Key 管理</h4>
+      <div class="input-group">
+        <label for="apiKeyInput">添加新的 API Key：</label>
+        <div class="file-input">
+          <input type="text" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+          <button id="addApiKeyBtn">添加</button>
+          <button id="testAllKeysBtn">测试所有</button>
+        </div>
+      </div>
+      <div id="apiKeyList">
+        <!-- API Key 列表将在这里动态生成 -->
+      </div>
+      <p style="font-size: 12px; color: #666; margin-top: 10px;">
+        💡 每个API Key每月可免费压缩500张图片。添加多个Key可获得更多额度。
+        <a href="https://tinypng.com/developers" target="_blank">获取免费API Key</a>
+      </p>
+      <p style="font-size: 11px; color: #28a745; margin-top: 5px; background-color: #d4edda; padding: 8px; border-radius: 4px; border-left: 3px solid #28a745;">
+        🔒 <strong>安全保证</strong>：API Key仅保存在您的本地计算机，不会被上传或分享给任何人
+      </p>
+    </div>
 
     
     <div class="input-group">
@@ -193,7 +269,17 @@
     <div class="size-settings">
       <h4>📐 图片尺寸设置</h4>
       
-      <div class="two-column">
+              <div class="checkbox-group" style="margin-bottom: 15px; padding: 10px; background-color: #e8f4f8; border: 1px solid #bee5eb; border-radius: 4px;">
+          <input type="checkbox" id="resizePngImages">
+          <label for="resizePngImages" style="margin-bottom: 0;">📐 对PNG图片也执行缩放</label>
+          <div style="font-size: 12px; color: #0c5460; margin-top: 5px;">
+            <strong>默认处理规则：</strong><br>
+            • JPG图片：自动缩放 + 压缩（确保符合大小限制）<br>
+            • PNG图片：仅压缩，保持原始尺寸（勾选此选项后也会缩放）
+          </div>
+        </div>
+      
+      <div id="resizeSettings" class="two-column">
         <div>
           <h5 style="margin-bottom: 10px; color: #0c5460;">🖼️ 横屏图片 (宽≥高)</h5>
           <div class="size-input-group">
@@ -234,10 +320,7 @@
     <div class="advanced-options">
       <h4>⚙️ 高级选项</h4>
       
-      <div class="checkbox-group">
-        <input type="checkbox" id="useLossless">
-        <label for="useLossless">使用无损压缩 (PNG格式，文件更大但质量最佳)</label>
-      </div>
+
       
       <div class="checkbox-group">
         <input type="checkbox" id="useAdvancedCompression" checked>
@@ -257,9 +340,20 @@
       
       <div style="font-size: 12px; color: #666; margin-top: 10px;">
         <strong>💡 压缩算法说明：</strong><br>
+        
+        <strong>🎯 JPEG压缩模式：</strong><br>
         • <strong>商业级算法</strong>：使用MozJPEG编码器、渐进式压缩、网格量化等先进技术，压缩率可达80-90%<br>
         • <strong>标准算法</strong>：使用常规JPEG压缩，压缩率通常60-75%<br>
-        • <strong>无损压缩</strong>：PNG格式，质量完美但文件较大
+        • <strong>自动循环压缩</strong>：JPG图片会自动调整质量直到符合大小限制，确保100%成功<br>
+        
+        <strong>🖼️ PNG图片处理：</strong><br>
+        • <strong>默认保持原尺寸</strong>：PNG图片默认只压缩不缩放，保持最佳视觉效果<br>
+        • <strong>可选缩放</strong>：勾选"对PNG图片也执行缩放"可与JPG使用相同缩放规则<br>
+        
+        <strong>🔬 技术原理：</strong><br>
+        • JPG是有损压缩格式，可以通过降低质量无限压缩直到达到目标大小<br>
+        • PNG是无损压缩格式，主要通过优化编码和调色板减小文件大小<br>
+        • 商业级JPEG算法可在保持视觉质量的同时显著减小文件大小
       </div>
     </div>
     

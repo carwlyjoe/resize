@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const { processImage, processDirectory } = require('./imageProcessor');
+const { processImage, processDirectory, testTinyPNGKey } = require('./imageProcessor');
 
 // 设置控制台编码以正确显示中文
 if (process.platform === 'win32') {
@@ -122,12 +122,13 @@ ipcMain.handle('process-images', async (event, data) => {
       };
     } else {
       // 处理单个文件
-      await processImage(inputPath, outputPath, maxSizeBytes, optionsWithLog);
+      const result = await processImage(inputPath, outputPath, maxSizeBytes, optionsWithLog);
       onLog('');
       onLog('✅ 图片处理完成！');
       return { 
         success: true, 
-        message: '图片处理完成！' 
+        message: '图片处理完成！',
+        apiKeyUsage: result?.apiKeyUsage 
       };
     }
   } catch (error) {
@@ -138,4 +139,20 @@ ipcMain.handle('process-images', async (event, data) => {
       message: error.message 
     };
   }
-}); 
+});
+
+// 处理TinyPNG API Key测试
+ipcMain.handle('test-tinypng-key', async (event, apiKey) => {
+  try {
+    const result = await testTinyPNGKey(apiKey);
+    return result;
+  } catch (error) {
+    return {
+      valid: false,
+      error: error.message,
+      status: 'invalid'
+    };
+  }
+});
+
+ 

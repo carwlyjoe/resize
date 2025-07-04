@@ -57,6 +57,15 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.local
+.env.production
+
+# API Keys and sensitive data (additional safety)
+*.key
+*apikey*
+*api-key*
+config/keys.js
+secrets/
 
 # parcel-bundler cache
 .cache

@@ -43,8 +43,6 @@ electron-image-processor/
 ### 📝 文档文件
 
 - **README.md**: 详细的项目说明、安装指南和故障排除
-- **QUICK_START.md**: 三步快速入门指南
-- **push-to-github.md**: GitHub推送步骤指引
 - **PROJECT_STRUCTURE.md**: 项目结构说明（本文件）
 
 ## 启动方式优先级
